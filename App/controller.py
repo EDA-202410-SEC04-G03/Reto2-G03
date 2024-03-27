@@ -38,17 +38,55 @@ def new_controller():
     Crea una instancia del modelo
     """
     #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
-
+    
+    control = {'model': None}
+    control['model'] = model.new_data_structs()
+    return control
 
 # Funciones para la carga de datos
 
-def load_data(control, filename):
+
+def load_data(control):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos
-    pass
+    # TODO: Realizar la carga de datos.
+    structure = control['model']
+    loadjobs(structure)
+    loadskills(structure)
+    loademployment(structure)
+    loadmultilocation(structure)
+    
+    return structure
+
+def loadjobs(structure):
+    
+    file = cf.data_dir + 'Challenge-1/data/large-jobs.csv'
+    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
+    for i in input_file:
+        i['published_at'] = dt.strptime(i['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ') 
+        model.addjobs(structure, i)
+
+def loadskills(structure):
+    
+    file = cf.data_dir + 'Challenge-1/data/large-skills.csv'
+    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
+    for i in input_file:
+        model.addskills(structure, i)
+
+def loademployment(structure):
+    
+    file = cf.data_dir + 'Challenge-1/data/large-employments_types.csv'
+    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
+    for i in input_file:
+        model.addemployment(structure, i)
+
+def loadmultilocation(structure):
+    
+    file = cf.data_dir + 'Challenge-1/data/large-multilocations.csv'
+    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
+    for i in input_file:
+        model.addmultilocation(structure, i)
 
 
 # Funciones de ordenamiento

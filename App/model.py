@@ -45,27 +45,52 @@ def new_data_structs():
     manera vacía para posteriormente almacenar la información.
     """
     #TODO: Inicializar las estructuras de datos
-    pass
+    structure = {'jobs': None,
+                  'skills': None,
+                  'employment': None,
+                  'multilocation': None}
+    
+    structure['jobs'] = lst.new_list()
+    structure['skills'] = lst.new_list()
+    structure['employment'] = lst.new_list()
+    structure['multilocation'] = lst.new_list()
+    
+    return structure
 
 
 # Funciones para agregar informacion al modelo
 
-def add_data(data_structs, data):
+def addjobs(struct, job):
     """
     Función para agregar nuevos elementos a la lista
     """
-    #TODO: Crear la función para agregar elementos a una lista
-    pass
+    
+    lst.addlast(struct['jobs'], job)
+    return struct
 
-
-# Funciones para creacion de datos
-
-def new_data(id, info):
+def addskills(struct, skill):
     """
-    Crea una nueva estructura para modelar los datos
+    Función para agregar nuevos elementos a la lista
     """
-    #TODO: Crear la función para estructurar los datos
-    pass
+    
+    lst.addlast(struct['skills'], skill)
+    return struct
+
+def addemployment(struct, employ):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+    
+    lst.addlast(struct['employment'], employ)
+    return struct
+
+def addmultilocation(struct, location):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+    
+    lst.addlast(struct['multilocation'], location)
+    return struct
 
 
 # Funciones de consulta

@@ -58,13 +58,21 @@ def print_menu():
     print("9- Ejecutar Requerimiento 8")
     print("0- Salir")
 
+def print_tabla(data):
+    """
+        Función que imprime un dato dado su ID
+    """
+    tabla = tabulate(data, tablefmt="pretty", headers="keys", missingval= 'Unkwnown', 
+                     colalign=("left", "left", "right", "left"))
+    print(tabla)
+    print()
 
 def load_data(control):
-    """
+    """N
     Carga los datos
     """
     #TODO: Realizar la carga de datos
-    pass
+    return controller.load_data(control)
 
 
 def print_data(control, id):

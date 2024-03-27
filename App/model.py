@@ -45,51 +45,41 @@ def new_data_structs():
     manera vacía para posteriormente almacenar la información.
     """
     #TODO: Inicializar las estructuras de datos
-    structure = {'jobs': None,
-                  'skills': None,
-                  'employment': None,
-                  'multilocation': None}
+    structure = {'jobsLT': None,
+                  'jobs': None,
+                  'ID': None}
     
-    structure['jobs'] = lst.new_list()
-    structure['skills'] = lst.new_list()
-    structure['employment'] = lst.new_list()
-    structure['multilocation'] = lst.new_list()
+    structure['jobsLT'] = lst.new_list()
+    structure['jobs'] = mp.new_map()
+    structure['ID'] = mp.new_map()
     
     return structure
 
 
 # Funciones para agregar informacion al modelo
 
+def addjobsLT(struct, job):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+    
+    lst.addlast(struct['jobsLT'], job)
+    return struct
+
 def addjobs(struct, job):
     """
     Función para agregar nuevos elementos a la lista
     """
     
-    lst.addlast(struct['jobs'], job)
+    lst.put(struct['jobs'], job['Published_at'], job)
     return struct
 
-def addskills(struct, skill):
+def addid(struct, id):
     """
     Función para agregar nuevos elementos a la lista
     """
     
-    lst.addlast(struct['skills'], skill)
-    return struct
-
-def addemployment(struct, employ):
-    """
-    Función para agregar nuevos elementos a la lista
-    """
-    
-    lst.addlast(struct['employment'], employ)
-    return struct
-
-def addmultilocation(struct, location):
-    """
-    Función para agregar nuevos elementos a la lista
-    """
-    
-    lst.addlast(struct['multilocation'], location)
+    mp.put(struct['ID'], id['id'], id)
     return struct
 
 

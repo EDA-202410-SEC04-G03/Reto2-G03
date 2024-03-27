@@ -66,27 +66,28 @@ def loadjobs(structure):
     for i in input_file:
         i['published_at'] = dt.strptime(i['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ') 
         model.addjobs(structure, i)
+        model.addjobsLT(structure, i)
 
 def loadskills(structure):
     
     file = cf.data_dir + 'Challenge-1/data/large-skills.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
-        model.addskills(structure, i)
+        model.addid(structure, i)
 
 def loademployment(structure):
     
     file = cf.data_dir + 'Challenge-1/data/large-employments_types.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
-        model.addemployment(structure, i)
+        model.addid(structure, i)
 
 def loadmultilocation(structure):
     
     file = cf.data_dir + 'Challenge-1/data/large-multilocations.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
-        model.addmultilocation(structure, i)
+        model.addid(structure, i)
 
 
 # Funciones de ordenamiento

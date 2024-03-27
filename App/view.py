@@ -23,9 +23,10 @@
 import config as cf
 import sys
 import controller
-#TODO: import your list and sorting implementations
+import threading
 assert cf
 from tabulate import tabulate
+import Estructuras.Lista as lst
 import traceback
 
 """
@@ -140,27 +141,42 @@ def print_req_8(control):
 # Se crea el controlador asociado a la vista
 control = new_controller()
 
+# set el limite de recursion
+default_limit = 1000
+
+
 # main del reto
-if __name__ == "__main__":
+def menu_cycle():
     """
     Menu principal
     """
     working = True
+    
     #ciclo del menu
     while working:
         print_menu()
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
-            data = load_data(control)
+            load_data(control)
+            
         elif int(inputs) == 2:
-            print_req_1(control)
+            pais = str(input("Ingrese el codigo del pais: "))
+            exp = str(input("Ingrese el nivel de experiencia (junior, mid, o senior): "))
+            n = int(input("Ingresa la cantidad de trabajos a consultar: "))
+            print_req_1(control, pais, exp, n)
 
         elif int(inputs) == 3:
-            print_req_2(control)
+            city = str(input("Ingrese la ciudad de consulta: "))
+            emp = str(input("Ingrese el nombre de la empresa: "))
+            n = int(input("Ingresa la cantidad de trabajos a consultar: "))
+            print_req_2(control, city, emp, n)
 
         elif int(inputs) == 4:
-            print_req_3(control)
+            empresa = str(input("Ingrese el nombre de la empresa: "))
+            fi = str(input("Ingrese la fecha inicial de consulta (Y-M-D): "))
+            ff = str(input("Ingresa la fecha final de consulta (Y-M-D): "))
+            print_req_3(control, empresa, fi, ff)
 
         elif int(inputs) == 5:
             print_req_4(control)
@@ -169,7 +185,12 @@ if __name__ == "__main__":
             print_req_5(control)
 
         elif int(inputs) == 7:
-            print_req_6(control)
+            exp = str(input("Ingrese el nombre de la empresa: "))
+            fi = str(input("fecha inicial: "))
+            ff = str(input("fecha final: "))
+            pais = str(input("pais: "))
+            n = str(input("n: "))
+            print_req_6(control, exp, fi, ff, pais, n)
 
         elif int(inputs) == 8:
             print_req_7(control)
@@ -183,3 +204,11 @@ if __name__ == "__main__":
         else:
             print("Opción errónea, vuelva a elegir.\n")
     sys.exit(0)
+
+if __name__ == "__main__":
+    
+    threading.stack_size(67108864*2) # 128MB stack
+    sys.setrecursionlimit(default_limit*1000000)
+    thread = threading.Thread(target=menu_cycle)
+    thread.start()
+   # menu_cycle()

@@ -26,8 +26,10 @@
 
 
 import config as cf
-#TODO: import your list and sorting implementations
 assert cf
+import Estructuras.Lista as lst
+import Estructuras.Tabla as mp
+from datetime import datetime as dt
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá

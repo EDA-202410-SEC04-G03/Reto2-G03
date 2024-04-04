@@ -25,6 +25,7 @@ import model
 import time
 import csv
 import time
+import tracemalloc
 from datetime import datetime as dt
 
 
@@ -46,18 +47,32 @@ def new_controller():
 # Funciones para la carga de datos
 
 
-def load_data(control):
+def load_data(control, memflag=True):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos.
+    start_time = getTime()
+
+    if memflag is True:
+        tracemalloc.start()
+        start_memory = getMemory()
     structure = control['model']
     loadjobs(structure)
     loadskills(structure)
     loademployment(structure)
     loadmultilocation(structure)
     
-    return structure
+    stop_time = getTime()
+    delta_time = deltaTime(stop_time, start_time)
+
+    if memflag is True:
+        stop_memory = getMemory()
+        tracemalloc.stop()
+        delta_memory = deltaMemory(stop_memory, start_memory)
+        return delta_time, delta_memory
+
+    else:
+        return delta_time
 
 def loadjobs(structure):
     
@@ -88,6 +103,12 @@ def loadmultilocation(structure):
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         model.addid(structure, i)
+
+# Funciones de size
+
+def jobsltsize(control):
+    structure = control['model']
+    return model.jobsltsize(structure)
 
 
 # Funciones de ordenamiento
@@ -175,16 +196,43 @@ def req_8(control):
 
 # Funciones para medir tiempos de ejecucion
 
-def get_time():
+
+def getTime():
     """
     devuelve el instante tiempo de procesamiento en milisegundos
     """
     return float(time.perf_counter()*1000)
 
 
-def delta_time(start, end):
+def deltaTime(end, start):
     """
     devuelve la diferencia entre tiempos de procesamiento muestreados
     """
     elapsed = float(end - start)
     return elapsed
+
+
+# Funciones para medir la memoria utilizada
+
+
+def getMemory():
+    """
+    toma una muestra de la memoria alocada en instante de tiempo
+    """
+    return tracemalloc.take_snapshot()
+
+
+def deltaMemory(stop_memory, start_memory):
+    """
+    calcula la diferencia en memoria alocada del programa entre dos
+    instantes de tiempo y devuelve el resultado en bytes (ej.: 2100.0 B)
+    """
+    memory_diff = stop_memory.compare_to(start_memory, "filename")
+    delta_memory = 0.0
+
+    # suma de las diferencias en uso de memoria
+    for stat in memory_diff:
+        delta_memory = delta_memory + stat.size_diff
+    # de Byte -> kByte
+    delta_memory = delta_memory/1024.0
+    return delta_memory

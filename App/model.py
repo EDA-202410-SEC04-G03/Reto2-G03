@@ -93,12 +93,12 @@ def get_data(data_structs, id):
     pass
 
 
-def data_size(data_structs):
+def jobsltsize(struct):
     """
     Retorna el tamaño de la lista de datos
     """
     #TODO: Crear la función para obtener el tamaño de una lista
-    pass
+    return lst.size(struct['jobsLT'])
 
 
 def req_1(data_structs):

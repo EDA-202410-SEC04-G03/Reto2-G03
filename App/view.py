@@ -67,12 +67,12 @@ def print_tabla(data):
     print(tabla)
     print()
 
-def load_data(control):
+def load_data(control, mem):
     """N
     Carga los datos
     """
     #TODO: Realizar la carga de datos
-    return controller.load_data(control)
+    return controller.load_data(control, mem)
 
 
 def print_data(control, id):
@@ -145,6 +145,25 @@ def print_req_8(control):
     # TODO: Imprimir el resultado del requerimiento 8
     pass
 
+def castBoolean(value):
+    """
+    Convierte un valor a booleano
+    """
+    if value in ('True', 'true', 'TRUE', 'T', 't', '1', 1, True):
+        return True
+    else:
+        return False
+    
+def printLoadDataAnswer(answer):
+    """
+    Imprime los datos de tiempo y memoria de la carga de datos
+    """
+    if isinstance(answer, (list, tuple)) is True:
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "||",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
+    else:
+        print("Tiempo [ms]: ", f"{answer:.3f}")
+
 
 # Se crea el controlador asociado a la vista
 control = new_controller()
@@ -166,7 +185,12 @@ def menu_cycle():
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
-            load_data(control)
+            print("Desea observar el uso de memoria? (True/False)")
+            mem = input("Respuesta: ")
+            mem = castBoolean(mem)
+            answer = load_data(control, memflag=mem)
+            print('se cargaron {} ofertas de trabajos.'.format(controller.jobsltsize(control)))
+            printLoadDataAnswer(answer)
             
         elif int(inputs) == 2:
             pais = str(input("Ingrese el codigo del pais: "))

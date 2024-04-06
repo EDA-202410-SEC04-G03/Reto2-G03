@@ -41,8 +41,8 @@ def new_controller():
     """
         Se crea una instancia del controlador
     """
-    #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    pass
+    control = controller.new_controller()
+    return control
 
 
 def print_menu():
@@ -73,6 +73,33 @@ def load_data(control, mem):
     """
     #TODO: Realizar la carga de datos
     return controller.load_data(control, mem)
+
+def tload(lista):
+    orde2, orde1 = controller.sub3(lista)
+    lt = []
+    for i in orde2:
+        dic ={
+            'Fecha': i['published_at'], 'Titulo': i['title'],
+            'Empresa': i['company_name'], 'Experiencia': i['experience_level'],
+            'Pais': i['country_code'], 'Ciudad': i['city'] 
+        }
+        lt.append(dic)
+    for i in orde1:
+        dic ={
+            'Fecha': i['published_at'], 'Titulo': i['title'],
+            'Empresa': i['company_name'], 'Experiencia': i['experience_level'],
+            'Pais': i['country_code'], 'Ciudad': i['city'] 
+        }
+        lt.append(dic)
+    return lt
+
+def print_load(control):
+    
+    jobs = control['model']['jobsLT']
+    print()
+    print('----- Primeras y ultimas 3 ofertas de trabajo -----')
+    x = tload(jobs)
+    print_tabla(x)
 
 
 def print_data(control, id):
@@ -188,8 +215,9 @@ def menu_cycle():
             print("Desea observar el uso de memoria? (True/False)")
             mem = input("Respuesta: ")
             mem = castBoolean(mem)
-            answer = load_data(control, memflag=mem)
+            answer = load_data(control, mem)
             print('se cargaron {} ofertas de trabajos.'.format(controller.jobsltsize(control)))
+            print_load(control)
             printLoadDataAnswer(answer)
             
         elif int(inputs) == 2:

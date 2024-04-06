@@ -28,7 +28,7 @@
 import config as cf
 assert cf
 import Estructuras.Lista as lst
-import Estructuras.Tabla as mp
+import Estructuras.Hash_chain as mp
 from datetime import datetime as dt
 
 """
@@ -50,8 +50,8 @@ def new_data_structs():
                   'ID': None}
     
     structure['jobsLT'] = lst.new_list()
-    structure['jobs'] = mp.new_map()
-    structure['ID'] = mp.new_map()
+    structure['jobs'] = mp.new_map(114710)
+    structure['ID'] = mp.new_map(114710)
     
     return structure
 
@@ -71,7 +71,7 @@ def addjobs(struct, job):
     Función para agregar nuevos elementos a la lista
     """
     
-    lst.put(struct['jobs'], job['Published_at'], job)
+    mp.put(struct['jobs'], job, job['published_at'])
     return struct
 
 def addid(struct, id):
@@ -177,23 +177,18 @@ def compare(data_1, data_2):
 # Funciones de ordenamiento
 
 
-def sort_criteria(data_1, data_2):
-    """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
-
-    Args:
-        data1 (_type_): _description_
-        data2 (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    #TODO: Crear función comparadora para ordenar
-    pass
-
-
-def sort(data_structs):
-    """
-    Función encargada de ordenar la lista con los datos
-    """
-    #TODO: Crear función de ordenamiento
-    pass
+def sub3(lista):
+    size = lst.size(lista)
+    s1 = lst.sublist(lista, 0, 3)
+    s2 = lst.sublist(lista, size-3, 3)
+    orde1 = []
+    orde2 = []
+    node = s1['head']
+    for i in s1:
+        orde1.append(node['value'])
+        node = node['next']
+    node = s2['head']
+    for i in s2:
+        orde2.append(node['value'])
+        node = node['next']
+    return orde2, orde1

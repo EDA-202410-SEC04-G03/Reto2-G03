@@ -76,7 +76,7 @@ def load_data(control, memflag=True):
 
 def loadjobs(structure):
     
-    file = cf.data_dir + 'Challenge-1/data/large-jobs.csv'
+    file = cf.data_dir + 'Challenge-2/data/large-jobs.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         i['published_at'] = dt.strptime(i['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ') 
@@ -85,21 +85,21 @@ def loadjobs(structure):
 
 def loadskills(structure):
     
-    file = cf.data_dir + 'Challenge-1/data/large-skills.csv'
+    file = cf.data_dir + 'Challenge-2/data/large-skills.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         model.addid(structure, i)
 
 def loademployment(structure):
     
-    file = cf.data_dir + 'Challenge-1/data/large-employments_types.csv'
+    file = cf.data_dir + 'Challenge-2/data/large-employments_types.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         model.addid(structure, i)
 
 def loadmultilocation(structure):
     
-    file = cf.data_dir + 'Challenge-1/data/large-multilocations.csv'
+    file = cf.data_dir + 'Challenge-2/data/large-multilocations.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         model.addid(structure, i)
@@ -109,6 +109,10 @@ def loadmultilocation(structure):
 def jobsltsize(control):
     structure = control['model']
     return model.jobsltsize(structure)
+
+def sub3(lista):
+    orde2, orde1 = model.sub3(lista)
+    return orde2, orde1
 
 
 # Funciones de ordenamiento

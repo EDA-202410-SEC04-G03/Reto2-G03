@@ -53,6 +53,7 @@ def new_data_structs():
     structure['jobs'] = mp.new_map(114710)
     structure['ID'] = mp.new_map(114710)
     
+    
     return structure
 
 
@@ -79,7 +80,7 @@ def addid(struct, id):
     Función para agregar nuevos elementos a la lista
     """
     
-    mp.put(struct['ID'], id['id'], id)
+    mp.put(struct['ID'], id, id['id'])
     return struct
 
 

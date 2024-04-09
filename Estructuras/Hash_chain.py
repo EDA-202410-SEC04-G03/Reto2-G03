@@ -1,6 +1,7 @@
 factor=4
 
 def new_map(M):
+    M = next_prime(M)
     keys=[]
     for i in range(M):
         l=[]
@@ -12,9 +13,24 @@ def is_empty(map):
         return True
     else:
         return False
-    
+
 def hash_fun(map,key):
-    return int(key)%(int(map['capacity'])) 
+    
+    if type(key) == int:
+        n = key
+    else:
+        
+        i = 0
+        n = 0
+        x = {}
+        for l in 'abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789':
+            x[l] = i
+            i += 1
+        for l in str(key):
+            if l in 'abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789':
+                n += x[l]
+
+    return int(n)%(int(map['capacity'])) 
     
 def size(map):
     return map['load']
@@ -70,11 +86,4 @@ def remove_key(map,key):
     map['load']=map['load']-i
     return map
 
-map=new_map(3)
-k=1
-for v in 'abcdefghijklmnopqrstuvwxyz':
-    #print(map)
-    #print()
-    #print()
-    map=put(map,v,k)
-    k=k+1
+print(next_prime(300000))

@@ -82,7 +82,6 @@ def loadjobs(structure):
         i['published_at'] = dt.strptime(i['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ') 
         model.addjobs(structure, i)
         model.addjobsLT(structure, i)
-
 def loadskills(structure):
     
     file = cf.data_dir + 'Challenge-2/data/large-skills.csv'

@@ -76,7 +76,7 @@ def load_data(control, memflag=True):
 
 def loadjobs(structure):
     
-    file = cf.data_dir + 'Challenge-2/data/large-jobs.csv'
+    file = cf.data_dir + 'Challenge-2/data/small-jobs.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         i['published_at'] = dt.strptime(i['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ') 
@@ -84,21 +84,21 @@ def loadjobs(structure):
         model.addjobsLT(structure, i)
 def loadskills(structure):
     
-    file = cf.data_dir + 'Challenge-2/data/large-skills.csv'
+    file = cf.data_dir + 'Challenge-2/data/small-skills.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         model.addid(structure, i)
 
 def loademployment(structure):
     
-    file = cf.data_dir + 'Challenge-2/data/large-employments_types.csv'
+    file = cf.data_dir + 'Challenge-2/data/small-employments_types.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         model.addid(structure, i)
 
 def loadmultilocation(structure):
     
-    file = cf.data_dir + 'Challenge-2/data/large-multilocations.csv'
+    file = cf.data_dir + 'Challenge-2/data/small-multilocations.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         model.addid(structure, i)

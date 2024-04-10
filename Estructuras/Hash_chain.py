@@ -1,4 +1,6 @@
+
 factor=4
+
 
 def new_map(M):
     M = next_prime(M)
@@ -86,4 +88,3 @@ def remove_key(map,key):
     map['load']=map['load']-i
     return map
 
-print(next_prime(300000))

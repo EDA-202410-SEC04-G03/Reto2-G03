@@ -29,6 +29,7 @@ import config as cf
 assert cf
 import Estructuras.Lista as lst
 import Estructuras.Hash_chain as mp
+import Estructuras.Sorts.quicksort as qs
 from datetime import datetime as dt
 
 """
@@ -102,12 +103,24 @@ def jobsltsize(struct):
     return lst.size(struct['jobsLT'])
 
 
-def req_1(data_structs):
+def req_1(catalog, n, codPais, exp):
+
     """
     Función que soluciona el requerimiento 1
     """
     # TODO: Realizar el requerimiento 1
-    pass
+    tam= mp.size(catalog["req1"])
+    info= mp.get(catalog['req1'], codPais)
+    info= mp.getValue(info)
+    a= lst.new_list('ARRAY_LIST')
+    total_ofer= info[exp]
+        
+    size = lst.size(total_ofer)
+    i = size 
+    while i > 0 and lst.size(a) < n: 
+        lst.addlast(a, lst.get_element(total_ofer, i))
+        i-= 1       
+    return a, size
 
 
 def req_2(data_structs):
@@ -134,12 +147,122 @@ def req_4(data_structs):
     pass
 
 
-def req_5(data_structs):
+def req_5(jobs,ciudad,fecha1,fecha2):
     """
     Función que soluciona el requerimiento 5
     """
-    # TODO: Realizar el requerimiento 5
-    pass
+    (mapa_ofertas,lista_ofertas)=filtro_r5(jobs,ciudad,fecha1,fecha2)
+    lista_ofertas_ordenada=sort_r5(lista_ofertas)
+    num_ofertas=mapa_ofertas['load']
+
+    (mapa_empresas,lista_empresas)=empresas_r5(mapa_ofertas)
+    (mejor_empresa,peor_empresa,num_ofertas_max,num_ofertas_min)=empresas_extremales_r5(mapa_empresas,lista_empresas)
+    num_empresas=lista_empresas['size']
+
+    dic={
+        'num_ofertas':num_ofertas,
+        'num_empresas':num_empresas,
+        'mejor_empresa':mejor_empresa,
+        'max_ofertas':num_ofertas_max,
+        'peor_empresa':peor_empresa,
+        'min_ofertas':num_ofertas_min,
+        'lista_ofertas':lista_ofertas_ordenada
+        }
+
+    return dic
+
+def filtro_r5(mapa,ciudad,fecha1,fecha2):
+    """
+    Da un mapa y una lista de las ofertas en la ciudad entre ambas fechas.
+    """
+    fecha1=dt.strptime(fecha1, '%Y-%m-%dT%H:%M:%S.%fZ')
+    fecha2=dt.strptime(fecha2, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+    mapa_nuevo=mp.new_map(int(map['capacity']//50)+1) #TODO: Cambiar 50 por el numero de empresas
+    lista_nueva=lst.new_list()
+
+    for i in range(len(mapa['keys'])):
+        for j in len(mapa['keys'][i]):
+            key=mapa['keys'][i][j][0]
+            value=mapa['keys'][i][j][1]
+
+            if value['city']==ciudad and value['published_at']>=fecha1 and value['published_at']<=fecha2:
+                mapa_nuevo=mp.put(map,value,key)
+                lista_nueva=lst.addlast(lista_nueva,value)
+
+    return (mapa_nuevo,lista_nueva)
+
+def empresas_r5(mapa):
+    """
+    A partir del mapa filtrado, crea una lista con las empresas relevantes y un mapa que a cada empresa asigna el numero de ofertas. 
+    """
+    mapa_emp=mp.new_map(int(mapa['capacity']//5)+1) #TODO: Cambiar 5 por el numero promedio de ofertas en algun ejemplo
+    lista_empresas=lst.new_list()
+
+    for i in range(len(mapa['keys'])):
+        for j in len(mapa['keys'][i]):
+            key=mapa['keys'][i][j][0]
+            value=mapa['keys'][i][j][1]
+            empresa=value['company_name']
+
+            if not lst.contains(mapa_emp,empresa):
+                num_ofertas=1
+                mapa_emp=mp.put(mapa_emp,num_ofertas,empresa)
+                lista_emp=lst.add_last(lista_emp,empresa)
+            else:
+                mapa_emp['keys'][mp.hash_fun(empresa)][1]=mapa_emp['keys'][mp.hash_fun(empresa)][1]+1
+
+    return (mapa_emp,lista_emp)
+        
+def empresas_extremales_r5(mapa,lista):
+    '''
+    A partir del mapa y la lista anterior, retorna la empresa con más ofertas laborales y la empresa con menos ofertas laborales, 
+    junto con el número de ofertas que cada una ofrece.
+    Si hay dos empresas con la cantidad maximal, devuelve la primera en salir.
+    Si hay dos empresas con la cantidad minimal, devuelve la primera en salir.
+    '''
+    it=lst.iterator(lista)
+    empresa=it['value']
+
+    mejor_empresa=empresa
+    peor_empresa=empresa
+    num_ofertas_max=mapa['keys'][mp.hash_fun(empresa)][1]
+    num_ofertas_min=num_ofertas_max
+
+    while lst.has_next(it):
+        it=lst.next(it)
+        empresa=it['value']
+        num_ofertas=mapa['keys'][mp.hash_fun(empresa)][1]
+
+        if num_ofertas>num_ofertas_max:
+            num_ofertas_max=num_ofertas
+            mejor_empresa=empresa
+
+        if num_ofertas<num_ofertas_min:
+            num_ofertas_min=num_ofertas
+            peor_empresa=empresa
+
+    return (mejor_empresa,peor_empresa,num_ofertas_max,num_ofertas_min)
+
+def crit_r5(oferta1,oferta2):
+    '''
+    Es el criterio de comparación para dos ofertas. Retorna True si la primera debería ir antes o en la misma posición que la segunda y False de lo contrario.
+    '''
+    fecha1=oferta1['published_at']
+    fecha2=oferta2['published_at']
+    empresa1=oferta1['company_name'].lower()
+    empresa2=oferta2['company_name'].lower()
+
+    if fecha1<fecha2 or (fecha1==fecha2 and empresa1<=empresa2):
+        return True
+    else: 
+        return False
+
+def sort_r5(lista_ofertas):
+    '''
+    Toma la lista de ofertas y las ordena con el criterio anterior usando quicksort.
+    '''
+    return qs.csort(lista_ofertas,crit_r5)
 
 
 def req_6(data_structs):

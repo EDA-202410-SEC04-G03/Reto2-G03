@@ -141,7 +141,7 @@ def req_2(catalog, ciudad,emp, n):
     """
     # TODO: Realizar el requerimiento 2
     jobs = catalog['jobs']
-    infol = filtro_r1(jobs, ciudad,emp)
+    infol = filtro_r2(jobs, ciudad,emp)
     x = lst.sublist(infol, 0, n)
     return x
 
@@ -157,21 +157,44 @@ def filtro_r2(mapa,ciudad,emp):
         
             value = j[1]
 
-            if value['country_code'] == ciudad:
-                if value['experience_level'] == emp:
+            if value['city'] == ciudad:
+                if value['company_name'] == emp:
 
                     lista_nueva=lst.addlast(lista_nueva,value)
 
     return (lista_nueva)
 
 
-def req_3(data_structs):
+def req_3(catalog, empresa, fi, ff):
     """
     Función que soluciona el requerimiento 3
     """
     # TODO: Realizar el requerimiento 3
-    pass
+    jobs = catalog['jobs']
+    infom, infol = filtro_r3(jobs, empresa, fi, ff)
+    print('x')
+    
 
+def filtro_r3(mapa,empresa,fi, ff):
+    """
+    retorna un mapa y una lista de las ofertas en un pais segun nivel de experticia.
+    """
+
+    mapa_nuevo=mp.new_map(int(mapa['capacity']//80)+1) 
+    lista_nueva=lst.new_list()
+
+    for i in range(len(mapa['keys'])):
+        for j in (mapa['keys'][i]):
+        
+            key = j[0]
+            value = j[1]
+
+            if value['company_name']==empresa: 
+                if fi <= value['published_at'] <= ff:
+                    mapa_nuevo=mp.put(mapa_nuevo,value,key)
+                    lista_nueva=lst.addlast(lista_nueva,value)
+
+    return (mapa_nuevo,lista_nueva)
 
 def req_4(jobs, code, fecha1, fecha2):
     """
@@ -200,12 +223,12 @@ def filtro_r4(mapa,code,fecha1,fecha2):
     lista_nueva=lst.new_list()
 
     for i in range(len(mapa['keys'])):
-        for j in len(mapa['keys'][i]):
-            key=mapa['keys'][i][j][0]
-            value=mapa['keys'][i][j][1]
+        for j in (mapa['keys'][i]):
+            key = j[0]
+            value = j[1]
 
             if value['country_code']==code and value['published_at']>=fecha1 and value['published_at']<=fecha2:
-                mapa_nuevo=mp.put(map,value,key)
+                mapa_nuevo=mp.put(mapa_nuevo,value,key)
                 lista_nueva=lst.addlast(lista_nueva,value)
 
     return (mapa_nuevo,lista_nueva)
@@ -272,7 +295,7 @@ def filtro_r5(mapa,ciudad,fecha1,fecha2):
 
             if value['city']==ciudad: 
                 if fecha1 <= value['published_at'] <= fecha2:
-                    mapa_nuevo=mp.put(map,value,key)
+                    mapa_nuevo=mp.put(mapa_nuevo,value,key)
                     lista_nueva=lst.addlast(lista_nueva,value)
 
     return (mapa_nuevo,lista_nueva)

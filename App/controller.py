@@ -82,6 +82,7 @@ def loadjobs(structure):
         i['published_at'] = dt.strptime(i['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ') 
         model.addjobs(structure, i)
         model.addjobsLT(structure, i)
+        
 def loadskills(structure):
     
     file = cf.data_dir + 'Challenge-2/data/small-skills.csv'
@@ -159,6 +160,8 @@ def req_3(control, empresa, fi, ff):
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
+    fi = dt.strptime(fi, "%Y-%m-%d")
+    ff = dt.strptime(ff, "%Y-%m-%d")
     return model.req_3(control['model'], empresa, fi, ff)
 
 

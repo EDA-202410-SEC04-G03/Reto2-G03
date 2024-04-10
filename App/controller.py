@@ -118,6 +118,8 @@ def sub3(lista):
     orde2, orde1 = model.sub3(lista)
     return orde2, orde1
 
+def printlt(lista):
+    return model.printlt(lista)
 
 # Funciones de ordenamiento
 
@@ -144,7 +146,8 @@ def req_1(control, pais, exp, n):
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
-    return model.req_1(control['model'], pais, exp, n)
+    req, dic = model.req_1(control['model'], pais, exp, n)
+    return req, dic
 
 
 def req_2(control, ciudad, emp, n):

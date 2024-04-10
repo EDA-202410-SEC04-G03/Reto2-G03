@@ -110,30 +110,31 @@ def req_1(catalog, codPais, exp, n):
     """
     # TODO: Realizar el requerimiento 1
     jobs = catalog['jobs']
-    infom, infol = filtro_r1(jobs, codPais, exp)
+    infol, dic = filtro_r1(jobs, codPais, exp)
     x = lst.sublist(infol, 0, n)
-    return x
+    return x , dic
 
 def filtro_r1(mapa,pais,exp):
     """
     retorna un mapa y una lista de las ofertas en un pais segun nivel de experticia.
     """
 
-    mapa_nuevo=mp.new_map(int(mapa['capacity']//80)+1) 
-    lista_nueva=lst.new_list()
+    lista = lst.new_list()
+    dic = {'pais': pais,
+           'npais': 0,
+           'exp': 0}
 
     for i in range(len(mapa['keys'])):
         for j in (mapa['keys'][i]):
-        
             key = j[0]
             value = j[1]
-
             if value['country_code'] == pais:
+                dic['npais'] += 1
                 if value['experience_level'] == exp:
-                    mapa_nuevo=mp.put(mapa_nuevo,value,key)
-                    lista_nueva=lst.addlast(lista_nueva,value)
-
-    return (mapa_nuevo,lista_nueva)
+                    dic['exp'] += 1
+                    lst.addlast(lista, value)
+                    
+    return lista, dic
 
 def req_2(catalog, ciudad,emp, n):
     """
@@ -408,6 +409,36 @@ def compare(data_1, data_2):
 
 # Funciones de ordenamiento
 
+def printlt(lista):
+    x = []
+    size = lst.size(lista)
+    if size >= 10:
+        return sub5(lista, size)
+    else:
+        node = lista['head']
+        i = 0
+        while i < size: 
+            x.append(node['value'])
+            node = node['next']
+            i += 1
+        return x
+
+
+def sub5(lista, size):
+    s1 = lst.sublist(lista, 0, 5)
+    s2 = lst.sublist(lista, size-5, 5)
+    orde1 = []
+    orde2 = []
+    node = s1['head']
+    for i in s1:
+        orde1.append(node['value'])
+        node = node['next']
+    node = s2['head']
+    for i in s2:
+        orde2.append(node['value'])
+        node = node['next']
+    return orde2, orde1
+    
 
 def sub3(lista):
     size = lst.size(lista)

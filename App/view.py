@@ -84,6 +84,7 @@ def tload(lista):
             'Pais': i['country_code'], 'Ciudad': i['city'] 
         }
         lt.append(dic)
+        
     for i in orde1:
         dic ={
             'Fecha': i['published_at'], 'Titulo': i['title'],
@@ -91,6 +92,7 @@ def tload(lista):
             'Pais': i['country_code'], 'Ciudad': i['city'] 
         }
         lt.append(dic)
+        
     return lt
 
 def print_load(control):
@@ -101,20 +103,52 @@ def print_load(control):
     x = tload(jobs)
     print_tabla(x)
 
-
-def print_data(control, id):
-    """
-        Función que imprime un dato dado su ID
-    """
-    #TODO: Realizar la función para imprimir un elemento
-    pass
+def istupla(valor):
+    return isinstance(valor, tuple)
 
 def print_req_1(control, pais, exp, n):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 1
-    req = controller.req_1(control, pais, exp, n)
+    req, dic = controller.req_1(control, pais, exp, n)
+    print()
+    print('Hay {} ofertas de trabajo del pais {}.'.format(dic['npais'], pais))
+    print('Hay {} ofertas de trabajo para nivel de experiencia {}.'.format(dic['exp'], exp))
+    x = treq1(req)
+    print_tabla(x)
+    
+def treq1(req):
+    sub = controller.printlt(req)
+    lt = []
+    if istupla(req) == False:
+        for i in sub:
+            dic ={
+                'Fecha': i['published_at'], 'Titulo': i['title'],
+                'Empresa': i['company_name'], 'Experiencia': i['experience_level'],
+                'Pais': i['country_code'], 'Ciudad': i['city'], 
+                'tamaño_emp': i['company_size'], 'ubiacion': i['workplace_type'],
+                'Ucranianos': i['open_to_hire_ukrainians']}
+            lt.append(dic)
+    else:
+        for i in sub[0]:
+            dic ={
+                'Fecha': i['published_at'], 'Titulo': i['title'],
+                'Empresa': i['company_name'], 'Experiencia': i['experience_level'],
+                'Pais': i['country_code'], 'Ciudad': i['city'], 
+                'tamaño_emp': i['company_size'], 'ubiacion': i['workplace_type'],
+                'Ucranianos': i['open_to_hire_ukrainians']}
+            lt.append(dic)
+            
+        for i in sub[1]:
+            dic ={
+                'Fecha': i['published_at'], 'Titulo': i['title'],
+                'Empresa': i['company_name'], 'Experiencia': i['experience_level'],
+                'Pais': i['country_code'], 'Ciudad': i['city'], 
+                'tamaño_emp': i['company_size'], 'ubiacion': i['workplace_type'],
+                'Ucranianos': i['open_to_hire_ukrainians']}
+            lt.append(dic)
+    return lt
 
 def print_req_2(control, ciudad, emp, n):
     """

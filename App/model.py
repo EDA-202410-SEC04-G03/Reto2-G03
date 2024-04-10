@@ -103,25 +103,37 @@ def jobsltsize(struct):
     return lst.size(struct['jobsLT'])
 
 
-def req_1(catalog, n, codPais, exp):
+def req_1(catalog, codPais, exp, n):
 
     """
     Función que soluciona el requerimiento 1
     """
     # TODO: Realizar el requerimiento 1
-    tam= mp.size(catalog["req1"])
-    info= mp.get(catalog['req1'], codPais)
-    info= mp.getValue(info)
-    a= lst.new_list('ARRAY_LIST')
-    total_ofer= info[exp]
-        
-    size = lst.size(total_ofer)
-    i = size 
-    while i > 0 and lst.size(a) < n: 
-        lst.addlast(a, lst.get_element(total_ofer, i))
-        i-= 1       
-    return a, size
+    jobs = catalog['jobs']
+    infom, infol = filtro_r1(jobs, codPais, exp)
+    x = lst.sublist(infol, 0, n)
+    return x
 
+def filtro_r1(mapa,pais,exp):
+    """
+    retorna un mapa y una lista de las ofertas en un pais segun nivel de experticia.
+    """
+
+    mapa_nuevo=mp.new_map(int(mapa['capacity']//80)+1) 
+    lista_nueva=lst.new_list()
+
+    for i in range(len(mapa['keys'])):
+        for j in (mapa['keys'][i]):
+        
+            key = j[0]
+            value = j[1]
+
+            if value['country_code'] == pais:
+                if value['experience_level'] == exp:
+                    mapa_nuevo=mp.put(mapa_nuevo,value,key)
+                    lista_nueva=lst.addlast(lista_nueva,value)
+
+    return (mapa_nuevo,lista_nueva)
 
 def req_2(data_structs):
     """
@@ -178,17 +190,18 @@ def filtro_r5(mapa,ciudad,fecha1,fecha2):
     fecha1=dt.strptime(fecha1, '%Y-%m-%dT%H:%M:%S.%fZ')
     fecha2=dt.strptime(fecha2, '%Y-%m-%dT%H:%M:%S.%fZ')
 
-    mapa_nuevo=mp.new_map(int(map['capacity']//50)+1) #TODO: Cambiar 50 por el numero de empresas
+    mapa_nuevo=mp.new_map(int(mapa['capacity']//50)+1) #TODO: Cambiar 50 por el numero de empresas
     lista_nueva=lst.new_list()
 
     for i in range(len(mapa['keys'])):
-        for j in len(mapa['keys'][i]):
-            key=mapa['keys'][i][j][0]
-            value=mapa['keys'][i][j][1]
+        for j in (mapa['keys'][i]):
+            key = j[0]
+            value = j[1]
 
-            if value['city']==ciudad and value['published_at']>=fecha1 and value['published_at']<=fecha2:
-                mapa_nuevo=mp.put(map,value,key)
-                lista_nueva=lst.addlast(lista_nueva,value)
+            if value['city']==ciudad: 
+                if fecha1 <= value['published_at'] <= fecha2:
+                    mapa_nuevo=mp.put(map,value,key)
+                    lista_nueva=lst.addlast(lista_nueva,value)
 
     return (mapa_nuevo,lista_nueva)
 

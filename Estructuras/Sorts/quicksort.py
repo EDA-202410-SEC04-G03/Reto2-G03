@@ -1,4 +1,4 @@
-from Lista import lista as lst
+import Estructuras.Lista as lst
 
 def sort(lt):
     def le(a,b):

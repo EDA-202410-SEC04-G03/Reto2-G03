@@ -58,9 +58,9 @@ def load_data(control, memflag=True):
         start_memory = getMemory()
     structure = control['model']
     loadjobs(structure)
-    loadskills(structure)
-    loademployment(structure)
-    loadmultilocation(structure)
+    #loadskills(structure)
+    #loademployment(structure)
+    #loadmultilocation(structure)
     
     stop_time = getTime()
     delta_time = deltaTime(stop_time, start_time)
@@ -85,21 +85,25 @@ def loadjobs(structure):
 def loadskills(structure):
     
     file = cf.data_dir + 'Challenge-2/data/small-skills.csv'
-    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
+    headers = ['name','level','id']
+    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';', fieldnames=headers)
+    
     for i in input_file:
         model.addid(structure, i)
 
 def loademployment(structure):
     
     file = cf.data_dir + 'Challenge-2/data/small-employments_types.csv'
-    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
+    headers = ['type','id', 'currency_salary', 'salary_from', 'salary_to']
+    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';', fieldnames=headers)
     for i in input_file:
         model.addid(structure, i)
 
 def loadmultilocation(structure):
     
     file = cf.data_dir + 'Challenge-2/data/small-multilocations.csv'
-    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
+    headers = ['city','street','id']
+    input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';', fieldnames=headers)
     for i in input_file:
         model.addid(structure, i)
 
@@ -134,12 +138,12 @@ def get_data(control, id):
     pass
 
 
-def req_1(control):
+def req_1(control, pais, exp, n):
     """
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
-    pass
+    return model.req_1(control['model'], pais, exp, n)
 
 
 def req_2(control):

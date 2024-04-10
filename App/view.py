@@ -109,13 +109,12 @@ def print_data(control, id):
     #TODO: Realizar la función para imprimir un elemento
     pass
 
-def print_req_1(control):
+def print_req_1(control, pais, exp, n):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 1
-    pass
-
+    req = controller.req_1(control, pais, exp, n)
 
 def print_req_2(control):
     """

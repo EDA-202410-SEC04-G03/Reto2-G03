@@ -135,12 +135,34 @@ def filtro_r1(mapa,pais,exp):
 
     return (mapa_nuevo,lista_nueva)
 
-def req_2(data_structs):
+def req_2(catalog, ciudad,emp, n):
     """
     Función que soluciona el requerimiento 2
     """
     # TODO: Realizar el requerimiento 2
-    pass
+    jobs = catalog['jobs']
+    infol = filtro_r1(jobs, ciudad,emp)
+    x = lst.sublist(infol, 0, n)
+    return x
+
+def filtro_r2(mapa,ciudad,emp):
+    """
+    retorna un mapa y una lista de las ofertas en un pais segun nivel de experticia.
+    """
+
+    lista_nueva=lst.new_list()
+
+    for i in range(len(mapa['keys'])):
+        for j in (mapa['keys'][i]):
+        
+            value = j[1]
+
+            if value['country_code'] == ciudad:
+                if value['experience_level'] == emp:
+
+                    lista_nueva=lst.addlast(lista_nueva,value)
+
+    return (lista_nueva)
 
 
 def req_3(data_structs):

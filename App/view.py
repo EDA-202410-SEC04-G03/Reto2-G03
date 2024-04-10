@@ -116,20 +116,20 @@ def print_req_1(control, pais, exp, n):
     # TODO: Imprimir el resultado del requerimiento 1
     req = controller.req_1(control, pais, exp, n)
 
-def print_req_2(control):
+def print_req_2(control, ciudad, emp, n):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    pass
+    req = controller.req_2(control, ciudad, emp, n)
 
 
-def print_req_3(control):
+def print_req_3(control, empresa, fi, ff):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    pass
+    req = controller.req_3(control, empresa, fi, ff)
 
 
 def print_req_4(control):

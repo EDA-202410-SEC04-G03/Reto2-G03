@@ -126,12 +126,62 @@ def req_3(data_structs):
     pass
 
 
-def req_4(data_structs):
+def req_4(jobs, code, fecha1, fecha2):
     """
     Función que soluciona el requerimiento 4
     """
     # TODO: Realizar el requerimiento 4
-    pass
+    (mapa_ofertas,lista_ofertas)=filtro_r4(jobs,code,fecha1,fecha2)
+    lista_ofertas_ordenada=sort_r4(lista_ofertas)
+    num_ofertas=mapa_ofertas['load']
+
+    dic={
+        'num_ofertas':num_ofertas,
+        'lista_ofertas_ordenada':lista_ofertas_ordenada
+        }
+
+    return dic
+
+def filtro_r4(mapa,code,fecha1,fecha2):
+    """
+    Retorna un mapa y una lista de las ofertas.
+    """
+    fecha1=dt.strptime(fecha1, '%Y-%m-%dT%H:%M:%S.%fZ')
+    fecha2=dt.strptime(fecha2, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+    mapa_nuevo=mp.new_map(int(mapa['capacity']//50)+1)
+    lista_nueva=lst.new_list()
+
+    for i in range(len(mapa['keys'])):
+        for j in len(mapa['keys'][i]):
+            key=mapa['keys'][i][j][0]
+            value=mapa['keys'][i][j][1]
+
+            if value['country_code']==code and value['published_at']>=fecha1 and value['published_at']<=fecha2:
+                mapa_nuevo=mp.put(map,value,key)
+                lista_nueva=lst.addlast(lista_nueva,value)
+
+    return (mapa_nuevo,lista_nueva)
+
+def crit_r4(oferta1,oferta2):
+    '''
+    Compara dos ofertas.
+    '''
+    fecha1=oferta1['published_at']
+    fecha2=oferta2['published_at']
+    empresa1=oferta1['company_name'].lower()
+    empresa2=oferta2['company_name'].lower()
+
+    if fecha1<fecha2 or (fecha1==fecha2 and empresa1<=empresa2):
+        return True
+    else: 
+        return False
+
+def sort_r4(lista_ofertas):
+    '''
+    Ordena la lista de ofertas por quicksort.
+    '''
+    return qs.csort(lista_ofertas,crit_r4)
 
 
 def req_5(data_structs):

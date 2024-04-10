@@ -155,7 +155,8 @@ def req_2(control, ciudad, emp, n):
     Retorna el resultado del requerimiento 2
     """
     # TODO: Modificar el requerimiento 2
-    return model.req_2(control['model'], ciudad, emp, n)
+    req, size = model.req_2(control['model'], ciudad, emp, n)
+    return req, size
 
 
 def req_3(control, empresa, fi, ff):
@@ -206,7 +207,8 @@ def req_8(control):
     # TODO: Modificar el requerimiento 8
     pass
 
-
+def isremoto(lt):
+    return model.isremoto(lt)
 # Funciones para medir tiempos de ejecucion
 
 

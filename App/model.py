@@ -143,8 +143,9 @@ def req_2(catalog, ciudad,emp, n):
     # TODO: Realizar el requerimiento 2
     jobs = catalog['jobs']
     infol = filtro_r2(jobs, ciudad,emp)
+    size = lst.size(infol)
     x = lst.sublist(infol, 0, n)
-    return x
+    return x, size
 
 def filtro_r2(mapa,ciudad,emp):
     """
@@ -155,16 +156,11 @@ def filtro_r2(mapa,ciudad,emp):
 
     for i in range(len(mapa['keys'])):
         for j in (mapa['keys'][i]):
-        
             value = j[1]
-
             if value['city'] == ciudad:
                 if value['company_name'] == emp:
-
                     lista_nueva=lst.addlast(lista_nueva,value)
-
     return (lista_nueva)
-
 
 def req_3(catalog, empresa, fi, ff):
     """
@@ -407,7 +403,12 @@ def compare(data_1, data_2):
     #TODO: Crear función comparadora de la lista
     pass
 
-# Funciones de ordenamiento
+
+def isremoto(lt):
+    if lt is 'remoto':
+        return True
+    else:
+        return False
 
 def printlt(lista):
     x = []
@@ -422,7 +423,6 @@ def printlt(lista):
             node = node['next']
             i += 1
         return x
-
 
 def sub5(lista, size):
     s1 = lst.sublist(lista, 0, 5)
@@ -439,7 +439,6 @@ def sub5(lista, size):
         node = node['next']
     return orde2, orde1
     
-
 def sub3(lista):
     size = lst.size(lista)
     s1 = lst.sublist(lista, 0, 3)

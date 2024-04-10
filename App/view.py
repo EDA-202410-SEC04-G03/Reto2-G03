@@ -150,12 +150,47 @@ def treq1(req):
             lt.append(dic)
     return lt
 
+def treq2(req):
+    sub = controller.printlt(req)
+    lt = []
+    if istupla(req) == False:
+        for i in sub:
+            dic ={
+                'Fecha': i['published_at'], 'Pais': i['country_code'], 'Ciudad': i['city'], 'Empresa': i['company_name'],
+                'Titulo': i['title'], 'Experiencia': i['experience_level'], 'formato aplicacion': i['workplace_type'], 
+                'tipo trabajo (remoto o no)': controller.isremoto(i['workplace_type'])
+                }
+            lt.append(dic)
+    else:
+        for i in sub[0]:
+            dic ={
+                'Fecha': i['published_at'], 'Pais': i['country_code'], 'Ciudad': i['city'], 'Empresa': i['company_name'],
+                'Titulo': i['title'], 'Experiencia': i['experience_level'], 'formato aplicacion': i['workplace_type'], 
+                'tipo trabajo (remoto o no)': controller.isremoto(i['workplace_type'])
+                }
+            lt.append(dic)
+            
+        for i in sub[1]:
+            dic ={
+                'Fecha': i['published_at'], 'Pais': i['country_code'], 'Ciudad': i['city'], 'Empresa': i['company_name'],
+                'Titulo': i['title'], 'Experiencia': i['experience_level'], 'formato aplicacion': i['workplace_type'], 
+                'tipo trabajo (remoto o no)': controller.isremoto(i['workplace_type'])
+                }
+            lt.append(dic)
+    return lt
+
+
+
 def print_req_2(control, ciudad, emp, n):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    req = controller.req_2(control, ciudad, emp, n)
+    req, size = controller.req_2(control, ciudad, emp, n)
+    print()
+    print('Hay {} ofertas de trabajo en la ciudad {} de la empresa {}.'.format(size, ciudad, emp))
+    x = treq2(req)
+    print_tabla(x)
 
 
 def print_req_3(control, empresa, fi, ff):

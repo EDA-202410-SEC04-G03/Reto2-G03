@@ -115,13 +115,15 @@ def print_req_1(control, pais, exp, n):
     print()
     print('Hay {} ofertas de trabajo del pais {}.'.format(dic['npais'], pais))
     print('Hay {} ofertas de trabajo para nivel de experiencia {}.'.format(dic['exp'], exp))
-    x = treq1(req)
+    x, m10 = treq1(req)
+    if m10:
+        print('Hay mas de 10 datos, por lo tanto se imprimen los primeros y ultimos 5.')
     print_tabla(x)
     
 def treq1(req):
     sub = controller.printlt(req)
     lt = []
-    if istupla(req) == False:
+    if istupla(sub) == False:
         for i in sub:
             dic ={
                 'Fecha': i['published_at'], 'Titulo': i['title'],
@@ -148,38 +150,7 @@ def treq1(req):
                 'tamaño_emp': i['company_size'], 'ubiacion': i['workplace_type'],
                 'Ucranianos': i['open_to_hire_ukrainians']}
             lt.append(dic)
-    return lt
-
-def treq2(req):
-    sub = controller.printlt(req)
-    lt = []
-    if istupla(req) == False:
-        for i in sub:
-            dic ={
-                'Fecha': i['published_at'], 'Pais': i['country_code'], 'Ciudad': i['city'], 'Empresa': i['company_name'],
-                'Titulo': i['title'], 'Experiencia': i['experience_level'], 'formato aplicacion': i['workplace_type'], 
-                'tipo trabajo (remoto o no)': controller.isremoto(i['workplace_type'])
-                }
-            lt.append(dic)
-    else:
-        for i in sub[0]:
-            dic ={
-                'Fecha': i['published_at'], 'Pais': i['country_code'], 'Ciudad': i['city'], 'Empresa': i['company_name'],
-                'Titulo': i['title'], 'Experiencia': i['experience_level'], 'formato aplicacion': i['workplace_type'], 
-                'tipo trabajo (remoto o no)': controller.isremoto(i['workplace_type'])
-                }
-            lt.append(dic)
-            
-        for i in sub[1]:
-            dic ={
-                'Fecha': i['published_at'], 'Pais': i['country_code'], 'Ciudad': i['city'], 'Empresa': i['company_name'],
-                'Titulo': i['title'], 'Experiencia': i['experience_level'], 'formato aplicacion': i['workplace_type'], 
-                'tipo trabajo (remoto o no)': controller.isremoto(i['workplace_type'])
-                }
-            lt.append(dic)
-    return lt
-
-
+    return lt, istupla(sub)
 
 def print_req_2(control, ciudad, emp, n):
     """
@@ -189,17 +160,88 @@ def print_req_2(control, ciudad, emp, n):
     req, size = controller.req_2(control, ciudad, emp, n)
     print()
     print('Hay {} ofertas de trabajo en la ciudad {} de la empresa {}.'.format(size, ciudad, emp))
-    x = treq2(req)
+    x, m10 = treq2(req)
+    if m10:
+        print('Hay mas de 10 datos, por lo tanto se imprimen los primeros y ultimos 5.')
     print_tabla(x)
 
+def treq2(req):
+    sub = controller.printlt(req)
+    lt = []
+    if istupla(sub) == False:
+        for i in sub:
+            dic ={
+                'Fecha': i['published_at'], 'Pais': i['country_code'], 'Ciudad': i['city'], 'Empresa': i['company_name'],
+                'Titulo': i['title'], 'Experiencia': i['experience_level'], 'formato aplicacion': i['workplace_type'], 
+                'tipo trabajo (remoto o no)': controller.isremoto(i['workplace_type'])
+                }
+            lt.append(dic)
+        m10 = False
+    else:
+        for i in sub[0]:
+            dic ={
+                'Fecha': i['published_at'], 'Pais': i['country_code'], 'Ciudad': i['city'], 'Empresa': i['company_name'],
+                'Titulo': i['title'], 'Experiencia': i['experience_level'], 'formato aplicacion': i['workplace_type'], 
+                'tipo trabajo (remoto o no)': controller.isremoto(i['workplace_type'])
+                }
+            lt.append(dic)
+            
+        for i in sub[1]:
+            dic ={
+                'Fecha': i['published_at'], 'Pais': i['country_code'], 'Ciudad': i['city'], 'Empresa': i['company_name'],
+                'Titulo': i['title'], 'Experiencia': i['experience_level'], 'formato aplicacion': i['workplace_type'], 
+                'tipo trabajo (remoto o no)': controller.isremoto(i['workplace_type'])
+                }
+            lt.append(dic)
+        m10 = True
+    return lt, m10
 
 def print_req_3(control, empresa, fi, ff):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    req = controller.req_3(control, empresa, fi, ff)
+    req, dic = controller.req_3(control, empresa, fi, ff)
+    print()
+    print('Hay {} ofertas publicadas por la empresa {} dentro de las fechas establecidas.'.format(lst.size(req), empresa))
+    print('Hay {} ofertas con experiencia junior. '.format(dic['junior']))
+    print('Hay {} ofertas con experiencia mid. '.format(dic['mid']))
+    print('Hay {} ofertas con experiencia senior. '.format(dic['senior']))
+    x, m10 = treq3(req)
+    if m10:
+        print('Hay mas de 10 datos, por lo tanto se imprimen los primeros y ultimos 5.')
+    print_tabla(x)
 
+def treq3(req):
+    sub = controller.printlt(req)
+    lt = []
+    if istupla(sub) == False:
+        for i in sub:
+            dic ={
+                'Fecha': i['published_at'], 'Titulo': i['title'], 'Experiencia': i['experience_level'], 'Ciudad': i['city'],
+                'Pais': i['country_code'], 'tamaño_emp': i['company_size'], 'ugar trabajo': i['workplace_type'],
+                  'formato aplicacion': i['workplace_type'], 'Ucranianos': i['open_to_hire_ukrainians']
+                }
+            lt.append(dic)
+        m10 = False
+    else:
+        for i in sub[0]:
+            dic ={
+                'Fecha': i['published_at'], 'Titulo': i['title'], 'Experiencia': i['experience_level'], 'Ciudad': i['city'],
+                'Pais': i['country_code'], 'tamaño_emp': i['company_size'], 'ugar trabajo': i['workplace_type'],
+                  'formato aplicacion': i['workplace_type'], 'Ucranianos': i['open_to_hire_ukrainians']
+                }
+            lt.append(dic)
+            
+        for i in sub[1]:
+            dic ={
+                'Fecha': i['published_at'], 'Titulo': i['title'], 'Experiencia': i['experience_level'], 'Ciudad': i['city'],
+                'Pais': i['country_code'], 'tamaño_emp': i['company_size'], 'ugar trabajo': i['workplace_type'],
+                  'formato aplicacion': i['workplace_type'], 'Ucranianos': i['open_to_hire_ukrainians']
+                }
+            lt.append(dic)
+        m10 = True
+    return lt, m10
 
 def print_req_4(control):
     """

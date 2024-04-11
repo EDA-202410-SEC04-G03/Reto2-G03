@@ -166,7 +166,8 @@ def req_3(control, empresa, fi, ff):
     # TODO: Modificar el requerimiento 3
     fi = dt.strptime(fi, "%Y-%m-%d")
     ff = dt.strptime(ff, "%Y-%m-%d")
-    return model.req_3(control['model'], empresa, fi, ff)
+    req, dic = model.req_3(control['model'], empresa, fi, ff)
+    return req, dic
 
 
 def req_4(control):

@@ -168,17 +168,19 @@ def req_3(catalog, empresa, fi, ff):
     """
     # TODO: Realizar el requerimiento 3
     jobs = catalog['jobs']
-    infom, infol = filtro_r3(jobs, empresa, fi, ff)
-    print('x')
-    
+    infol, dic = filtro_r3(jobs, empresa, fi, ff)
+    return infol, dic 
+
 
 def filtro_r3(mapa,empresa,fi, ff):
     """
     retorna un mapa y una lista de las ofertas en un pais segun nivel de experticia.
     """
 
-    mapa_nuevo=mp.new_map(int(mapa['capacity']//80)+1) 
     lista_nueva=lst.new_list()
+    dic = {'mid': 0,
+           'senior': 0,
+           'junior': 0}
 
     for i in range(len(mapa['keys'])):
         for j in (mapa['keys'][i]):
@@ -188,10 +190,17 @@ def filtro_r3(mapa,empresa,fi, ff):
 
             if value['company_name']==empresa: 
                 if fi <= value['published_at'] <= ff:
-                    mapa_nuevo=mp.put(mapa_nuevo,value,key)
                     lista_nueva=lst.addlast(lista_nueva,value)
+                    if value['experience_level'] == 'mid':
+                        dic['mid'] += 1
+                    if value['experience_level'] == 'senior':
+                        dic['junior'] += 1
+                    if value['experience_level'] == 'junior':
+                        dic['senior'] += 1
+                 
+                    
 
-    return (mapa_nuevo,lista_nueva)
+    return lista_nueva, dic
 
 def req_4(jobs, code, fecha1, fecha2):
     """
@@ -430,13 +439,17 @@ def sub5(lista, size):
     orde1 = []
     orde2 = []
     node = s1['head']
-    for i in s1:
+    i = 0
+    while i < 5:
         orde1.append(node['value'])
         node = node['next']
+        i += 1
     node = s2['head']
-    for i in s2:
+    j = 0
+    while j < 5:
         orde2.append(node['value'])
         node = node['next']
+        j += 1
     return orde2, orde1
     
 def sub3(lista):

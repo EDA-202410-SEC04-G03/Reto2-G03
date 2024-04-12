@@ -230,7 +230,7 @@ def crit3(oferta1, oferta2):
     else: 
         return True
 
-def req_4(catalog, code, fecha1, fecha2):
+def req_4(catalog, code, fi, ff):
     """
     Función que soluciona el requerimiento 4
     """

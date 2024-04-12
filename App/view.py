@@ -259,6 +259,7 @@ def print_req_5(control,ciudad,fecha1,fecha2):
         Función que imprime la solución del Requerimiento 5 en consola
     """
     (dic,lista,t) = controller.req_5(control, ciudad, fecha1, fecha2)
+    print()
     print('Hay {} ofertas publicadas en la ciudad de {} entra la fecha {} y la fecha {}.'.format(str(dic['num_ofertas']),ciudad,fecha1,fecha2))
     print('Hay {} empresas que publicaron ofertas en la ciudad de {} entra la fecha {} y la fecha {}.'.format(str(dic['num_empresas']),ciudad,fecha1,fecha2))
     print('La empresa que publicó más ofertas en la ciudad de {} entra la fecha {} y la fecha {} fue {}; dio {} ofertas.'.format(ciudad,fecha1,fecha2,dic['mejor_empresa'],str(dic['max_ofertas'])))

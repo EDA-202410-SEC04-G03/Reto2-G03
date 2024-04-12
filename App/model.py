@@ -315,7 +315,7 @@ def filtro_r5(mapa,ciudad,fecha1,fecha2):
     Da un mapa y una lista de las ofertas en la ciudad entre ambas fechas.
     """
 
-    mapa_nuevo=mp.new_map(int(mapa['capacity']//50)+1) 
+    mapa_nuevo=mp.new_map(int(mapa['capacity']//500)+1) 
     lista_nueva=lst.new_list()
 
     for i in range(len(mapa['keys'])):

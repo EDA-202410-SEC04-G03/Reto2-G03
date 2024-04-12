@@ -130,7 +130,7 @@ def filtro_r1(mapa,pais,exp):
                 dic['npais'] += 1
                 if value['experience_level'] == exp:
                     dic['exp'] += 1
-                    lst.crit_add_ordered(lista,value,crit1)
+                    lst.addlast(lista,value)
                     
     return lista, dic
 

@@ -156,6 +156,36 @@ def search(lista, element):
         if esta == False:
             return None
         
+def crit_add_ordered(lista,elemento,crit):
+    '''
+    La lista ya debe estar ordenada de menor a mayor, interpretando crit(a,b)==True como 'a es menor o igual a b'.
+    '''
+    if is_empty(lista):
+        addfirst(lista,elemento)
+    else:
+        actual=lista['head']
+        if crit(elemento,actual['value']):
+            addfirst(lista,elemento)
+        elif crit(lista['last']['value'],elemento):
+            addlast(lista,elemento)
+        else:
+            seguir=True
+            while seguir and not actual['next']==None:
+                if crit(elemento,actual['next']['value']):
+                    node={'value':elemento,'next':actual['next']}
+                    actual['next']=node
+                    seguir=False
+                else:
+                    actual=actual['next']
+
+def add_ordered(lista,elemento):
+    def le(a,b):
+        if a<=b:
+            return True
+        else:
+            return False
+    crit_add_ordered(lista,elemento,le)
+        
 def append(l1,l2):
     l1["last"]["next"] = l2["head"]
     l1["size"] += l2["size"]

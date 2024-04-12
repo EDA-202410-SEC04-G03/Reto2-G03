@@ -37,6 +37,13 @@ def hash_fun(map,key):
 def size(map):
     return map['load']
 
+def getvalue(map, key):
+    for i in map['keys'][hash_fun(map, key)]:
+        if i[0] == key:
+            return i[1]
+    return None
+
+
 def next_prime(n):
     ###
     #Recibe un número entero IMPAR y devuelve el menor primo mayor a n.

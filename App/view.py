@@ -67,12 +67,12 @@ def print_tabla(data):
     print(tabla)
     print()
 
-def load_data(control, mem):
+def load_data(control, mem, a):
     """N
     Carga los datos
     """
     #TODO: Realizar la carga de datos
-    return controller.load_data(control, mem)
+    return controller.load_data(control, a, mem)
 
 def tload(lista):
     orde2, orde1 = controller.sub3(lista)
@@ -111,7 +111,7 @@ def print_req_1(control, pais, exp, n):
         Función que imprime la solución del Requerimiento 1 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 1
-    req, dic = controller.req_1(control, pais, exp, n)
+    req, dic, t = controller.req_1(control, pais, exp, n)
     print()
     print('Hay {} ofertas de trabajo del pais {}.'.format(dic['npais'], pais))
     print('Hay {} ofertas de trabajo para nivel de experiencia {}.'.format(dic['exp'], exp))
@@ -119,6 +119,7 @@ def print_req_1(control, pais, exp, n):
     if m10:
         print('Hay mas de 10 datos, por lo tanto se imprimen los primeros y ultimos 5.')
     print_tabla(x)
+    print("Tiempo [ms]: {}".format(t))
     
 def treq1(req):
     sub = controller.printlt(req)
@@ -157,13 +158,14 @@ def print_req_2(control, ciudad, emp, n):
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    req, size = controller.req_2(control, ciudad, emp, n)
+    req, size, t = controller.req_2(control, ciudad, emp, n)
     print()
     print('Hay {} ofertas de trabajo en la ciudad {} de la empresa {}.'.format(size, ciudad, emp))
     x, m10 = treq2(req)
     if m10:
         print('Hay mas de 10 datos, por lo tanto se imprimen los primeros y ultimos 5.')
     print_tabla(x)
+    print("Tiempo [ms]: {}".format(t))
 
 def treq2(req):
     sub = controller.printlt(req)
@@ -201,7 +203,7 @@ def print_req_3(control, empresa, fi, ff):
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    req, dic = controller.req_3(control, empresa, fi, ff)
+    req, dic, t = controller.req_3(control, empresa, fi, ff)
     print()
     print('Hay {} ofertas publicadas por la empresa {} dentro de las fechas establecidas.'.format(lst.size(req), empresa))
     print('Hay {} ofertas con experiencia junior. '.format(dic['junior']))
@@ -211,6 +213,7 @@ def print_req_3(control, empresa, fi, ff):
     if m10:
         print('Hay mas de 10 datos, por lo tanto se imprimen los primeros y ultimos 5.')
     print_tabla(x)
+    print("Tiempo [ms]: {}".format(t))
 
 def treq3(req):
     sub = controller.printlt(req)
@@ -254,12 +257,61 @@ def print_req_4(control, code, fi, ff):
     print('Hay {} empresas que publicaron al menos una oferta en el país en el periodo de consulta.' .format(dic['TOTAL_EMPRESAS']))
     print('Hay {} ciudades en las que se publicaron ofertas en el país en el periodo de consulta.' .format(dic['TOTAL_CIUDADES']))
 
-def print_req_5(control):
+def print_req_5(control,ciudad,fecha1,fecha2):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 5
-    pass
+    (dic,lista,t) = controller.req_5(control, ciudad, fecha1, fecha2)
+    print()
+    print('Hay {} ofertas publicadas en la ciudad de {} entra la fecha {} y la fecha {}.'.format(str(dic['num_ofertas']),ciudad,fecha1,fecha2))
+    print('Hay {} empresas que publicaron ofertas en la ciudad de {} entra la fecha {} y la fecha {}.'.format(str(dic['num_empresas']),ciudad,fecha1,fecha2))
+    print('La empresa que publicó más ofertas en la ciudad de {} entra la fecha {} y la fecha {} fue {}; dio {} ofertas.'.format(ciudad,fecha1,fecha2,dic['mejor_empresa'],str(dic['max_ofertas'])))
+    print('La empresa que publicó menos ofertas en la ciudad de {} entra la fecha {} y la fecha {} fue {}; dio {} ofertas.'.format(ciudad,fecha1,fecha2,dic['peor_empresa'],str(dic['min_ofertas'])))
+
+
+    x, m10 = treq5(lista)
+    if m10:
+        print('Hay mas de 10 datos, por lo tanto se imprimen los primeros y últimos 5. Estos son:')
+    print_tabla(x)
+    print("Tiempo [ms]: {}".format(t))
+
+def treq5(req):
+    sub = controller.printlt(req) #Volverla lista de Python
+    lt = []
+    if istupla(sub) == False: #No es tupla (tiene menos de once elementos)
+        for i in sub:
+            dic ={
+                'Fecha de la Oferta': i['published_at'], 
+                'Titulo de la Oferta': i['title'], 
+                'Nombre de la Empresa':i['company_name'],
+                'Tamaño de la Empresa': i['company_size'], 
+                'Tipo de Lugar de trabajo': i['workplace_type'],
+                }
+            
+            lt.append(dic)
+        m10 = False
+    else:
+        for i in sub[0]: #Primeros cinco
+            dic ={
+                'Fecha de la Oferta': i['published_at'], 
+                'Titulo de la Oferta': i['title'], 
+                'Nombre de la Empresa':i['company_name'],
+                'Tamaño de la Empresa': i['company_size'], 
+                'Tipo de Lugar de trabajo': i['workplace_type'],
+                }
+            lt.append(dic)
+            
+        for i in sub[1]: #Últimos cinco
+            dic ={
+                'Fecha de la Oferta': i['published_at'], 
+                'Titulo de la Oferta': i['title'], 
+                'Nombre de la Empresa':i['company_name'],
+                'Tamaño de la Empresa': i['company_size'], 
+                'Tipo de Lugar de trabajo': i['workplace_type'],
+                }
+            lt.append(dic)
+        m10 = True #Dice si tiene
+    return lt, m10
 
 
 def print_req_6(control):
@@ -325,10 +377,11 @@ def menu_cycle():
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
+            a = input('archivo: ')
             print("Desea observar el uso de memoria? (True/False)")
             mem = input("Respuesta: ")
             mem = castBoolean(mem)
-            answer = load_data(control, mem)
+            answer = load_data(control, mem, a)
             print('se cargaron {} ofertas de trabajos.'.format(controller.jobsltsize(control)))
             print_load(control)
             printLoadDataAnswer(answer)
@@ -355,7 +408,10 @@ def menu_cycle():
             print_req_4(control)
 
         elif int(inputs) == 6:
-            print_req_5(control)
+            ciudad = str(input("Ingrese la ciudad a consultar: "))
+            fi = str(input("Ingrese la fecha inicial de consulta (Y-M-D): "))
+            ff = str(input("Ingresa la fecha final de consulta (Y-M-D): "))
+            print_req_5(control,ciudad,fi,ff)
 
         elif int(inputs) == 7:
             exp = str(input("Ingrese el nombre de la empresa: "))

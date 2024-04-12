@@ -112,12 +112,10 @@ def req_1(catalog, codPais, exp, n):
     jobs = catalog['jobs']
     infol, dic = filtro_r1(jobs, codPais, exp)
     x = lst.sublist(infol, 0, n)
+
     return x , dic
 
 def filtro_r1(mapa,pais,exp):
-    """
-    retorna un mapa y una lista de las ofertas en un pais segun nivel de experticia.
-    """
 
     lista = lst.new_list()
     dic = {'pais': pais,
@@ -132,9 +130,20 @@ def filtro_r1(mapa,pais,exp):
                 dic['npais'] += 1
                 if value['experience_level'] == exp:
                     dic['exp'] += 1
-                    lst.addlast(lista, value)
+                    lst.crit_add_ordered(lista,value,crit1)
                     
     return lista, dic
+
+def crit1(oferta1, oferta2):
+    fecha1=oferta1['published_at']
+    fecha2=oferta2['published_at']
+    empresa1=oferta1['country_code']
+    empresa2=oferta2['country_code']
+
+    if fecha1<fecha2 or (fecha1==fecha2 and empresa1<=empresa2):
+        return False
+    else: 
+        return True
 
 def req_2(catalog, ciudad,emp, n):
     """
@@ -149,7 +158,6 @@ def req_2(catalog, ciudad,emp, n):
 
 def filtro_r2(mapa,ciudad,emp):
     """
-    retorna un mapa y una lista de las ofertas en un pais segun nivel de experticia.
     """
 
     lista_nueva=lst.new_list()
@@ -159,8 +167,20 @@ def filtro_r2(mapa,ciudad,emp):
             value = j[1]
             if value['city'] == ciudad:
                 if value['company_name'] == emp:
-                    lista_nueva=lst.addlast(lista_nueva,value)
+                    lst.crit_add_ordered(lista_nueva,value, crit2)
+                    
     return (lista_nueva)
+
+def crit2(oferta1, oferta2):
+    fecha1=oferta1['published_at']
+    fecha2=oferta2['published_at']
+    empresa1=oferta1['city']
+    empresa2=oferta2['city']
+
+    if fecha1<fecha2 or (fecha1==fecha2 and empresa1<=empresa2):
+        return False
+    else: 
+        return True
 
 def req_3(catalog, empresa, fi, ff):
     """
@@ -170,7 +190,6 @@ def req_3(catalog, empresa, fi, ff):
     jobs = catalog['jobs']
     infol, dic = filtro_r3(jobs, empresa, fi, ff)
     return infol, dic 
-
 
 def filtro_r3(mapa,empresa,fi, ff):
     """
@@ -190,19 +209,28 @@ def filtro_r3(mapa,empresa,fi, ff):
 
             if value['company_name']==empresa: 
                 if fi <= value['published_at'] <= ff:
-                    lista_nueva=lst.addlast(lista_nueva,value)
+                    lst.crit_add_ordered(lista_nueva,value, crit3)
                     if value['experience_level'] == 'mid':
                         dic['mid'] += 1
                     if value['experience_level'] == 'senior':
-                        dic['junior'] += 1
-                    if value['experience_level'] == 'junior':
                         dic['senior'] += 1
-                 
-                    
+                    if value['experience_level'] == 'junior':
+                        dic['junior'] += 1
 
     return lista_nueva, dic
 
-def req_4(catalog, code, fi, ff):
+def crit3(oferta1, oferta2):
+    fecha1=oferta1['published_at']
+    fecha2=oferta2['published_at']
+    empresa1=oferta1['country_code']
+    empresa2=oferta2['country_code']
+
+    if fecha1<fecha2 or (fecha1==fecha2 and empresa1<=empresa2):
+        return False
+    else: 
+        return True
+
+def req_4(catalog, code, fecha1, fecha2):
     """
     Función que soluciona el requerimiento 4
     """
@@ -250,8 +278,7 @@ def req_5(jobs,ciudad,fecha1,fecha2):
     """
     Función que soluciona el requerimiento 5
     """
-    (mapa_ofertas,lista_ofertas)=filtro_r5(jobs,ciudad,fecha1,fecha2)
-    lista_ofertas_ordenada=sort_r5(lista_ofertas)
+    (mapa_ofertas,lista_ofertas)=filtro_r5(jobs['jobs'],ciudad,fecha1,fecha2)
     num_ofertas=mapa_ofertas['load']
 
     (mapa_empresas,lista_empresas)=empresas_r5(mapa_ofertas)
@@ -264,20 +291,17 @@ def req_5(jobs,ciudad,fecha1,fecha2):
         'mejor_empresa':mejor_empresa,
         'max_ofertas':num_ofertas_max,
         'peor_empresa':peor_empresa,
-        'min_ofertas':num_ofertas_min,
-        'lista_ofertas':lista_ofertas_ordenada
+        'min_ofertas':num_ofertas_min
         }
 
-    return dic
+    return (dic,lista_ofertas)
 
 def filtro_r5(mapa,ciudad,fecha1,fecha2):
     """
     Da un mapa y una lista de las ofertas en la ciudad entre ambas fechas.
     """
-    fecha1=dt.strptime(fecha1, '%Y-%m-%dT%H:%M:%S.%fZ')
-    fecha2=dt.strptime(fecha2, '%Y-%m-%dT%H:%M:%S.%fZ')
 
-    mapa_nuevo=mp.new_map(int(mapa['capacity']//50)+1) #TODO: Cambiar 50 por el numero de empresas
+    mapa_nuevo=mp.new_map(int(mapa['capacity']//500)+1) 
     lista_nueva=lst.new_list()
 
     for i in range(len(mapa['keys'])):
@@ -286,9 +310,9 @@ def filtro_r5(mapa,ciudad,fecha1,fecha2):
             value = j[1]
 
             if value['city']==ciudad: 
-                if fecha1 <= value['published_at'] <= fecha2:
+                if (fecha1 <= value['published_at']) and (value['published_at'] <= fecha2):
                     mapa_nuevo=mp.put(mapa_nuevo,value,key)
-                    lista_nueva=lst.addlast(lista_nueva,value)
+                    lst.crit_add_ordered(lista_nueva,value,crit_r5)
 
     return (mapa_nuevo,lista_nueva)
 
@@ -297,20 +321,25 @@ def empresas_r5(mapa):
     A partir del mapa filtrado, crea una lista con las empresas relevantes y un mapa que a cada empresa asigna el numero de ofertas. 
     """
     mapa_emp=mp.new_map(int(mapa['capacity']//5)+1) #TODO: Cambiar 5 por el numero promedio de ofertas en algun ejemplo
-    lista_empresas=lst.new_list()
+    lista_emp=lst.new_list()
 
     for i in range(len(mapa['keys'])):
-        for j in len(mapa['keys'][i]):
+        for j in range(len(mapa['keys'][i])):
             key=mapa['keys'][i][j][0]
             value=mapa['keys'][i][j][1]
             empresa=value['company_name']
 
-            if not lst.contains(mapa_emp,empresa):
+            if not mp.contains(mapa_emp,empresa):
                 num_ofertas=1
                 mapa_emp=mp.put(mapa_emp,num_ofertas,empresa)
-                lista_emp=lst.add_last(lista_emp,empresa)
+                lista_emp=lst.addlast(lista_emp,empresa)
             else:
-                mapa_emp['keys'][mp.hash_fun(empresa)][1]=mapa_emp['keys'][mp.hash_fun(empresa)][1]+1
+                for k in range(len(mapa_emp['keys'][mp.hash_fun(mapa_emp, empresa)])):
+                    value = mapa_emp['keys'][mp.hash_fun(mapa_emp, empresa)][k]
+                    llave = value[0]
+                    num = value[1]
+                    if llave == empresa:
+                        mapa_emp['keys'][mp.hash_fun(mapa_emp, empresa)][k] = (llave, num+1)                        
 
     return (mapa_emp,lista_emp)
         
@@ -321,18 +350,19 @@ def empresas_extremales_r5(mapa,lista):
     Si hay dos empresas con la cantidad maximal, devuelve la primera en salir.
     Si hay dos empresas con la cantidad minimal, devuelve la primera en salir.
     '''
-    it=lst.iterator(lista)
+    it = lst.iterator(lista)
     empresa=it['value']
 
     mejor_empresa=empresa
     peor_empresa=empresa
-    num_ofertas_max=mapa['keys'][mp.hash_fun(empresa)][1]
-    num_ofertas_min=num_ofertas_max
+    num = mp.getvalue(mapa, empresa) 
+    num_ofertas_max=num
+    num_ofertas_min=num
 
-    while lst.has_next(it):
-        it=lst.next(it)
+    while lst.hasNext(it):
+        it=lst.Next(it)
         empresa=it['value']
-        num_ofertas=mapa['keys'][mp.hash_fun(empresa)][1]
+        num_ofertas=mp.getvalue(mapa, empresa)
 
         if num_ofertas>num_ofertas_max:
             num_ofertas_max=num_ofertas
@@ -357,12 +387,6 @@ def crit_r5(oferta1,oferta2):
         return True
     else: 
         return False
-
-def sort_r5(lista_ofertas):
-    '''
-    Toma la lista de ofertas y las ordena con el criterio anterior usando quicksort.
-    '''
-    return qs.csort(lista_ofertas,crit_r5)
 
 
 def req_6(data_structs):
@@ -400,7 +424,7 @@ def compare(data_1, data_2):
 
 
 def isremoto(lt):
-    if lt is 'remoto':
+    if lt == 'remoto':
         return True
     else:
         return False
@@ -453,3 +477,11 @@ def sub3(lista):
         orde2.append(node['value'])
         node = node['next']
     return orde2, orde1
+
+def sortcritr1(v1, v2):
+    if (v1['published_at'] < v2['published_at']):
+        return True
+    elif  ((v1['published_at'] == v2['published_at']) and (v1['country_code'] < v2['country_code'])):
+        return True
+    else: 
+        return False

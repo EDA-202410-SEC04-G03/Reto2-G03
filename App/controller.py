@@ -47,7 +47,7 @@ def new_controller():
 # Funciones para la carga de datos
 
 
-def load_data(control, memflag=True):
+def load_data(control, a, memflag=True):
     """
     Carga los datos del reto
     """
@@ -57,10 +57,10 @@ def load_data(control, memflag=True):
         tracemalloc.start()
         start_memory = getMemory()
     structure = control['model']
-    loadjobs(structure)
-    #loadskills(structure)
-    #loademployment(structure)
-    #loadmultilocation(structure)
+    loadjobs(structure, a)
+    #loadskills(structure, a)
+    #loademployment(structure, a)
+    #loadmultilocation(structure, a)
     
     stop_time = getTime()
     delta_time = deltaTime(stop_time, start_time)
@@ -74,35 +74,35 @@ def load_data(control, memflag=True):
     else:
         return delta_time
 
-def loadjobs(structure):
+def loadjobs(structure, a):
     
-    file = cf.data_dir + 'Challenge-2/data/small-jobs.csv'
+    file = cf.data_dir + 'Challenge-2/data/{}-jobs.csv'.format(a)
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';')
     for i in input_file:
         i['published_at'] = dt.strptime(i['published_at'], '%Y-%m-%dT%H:%M:%S.%fZ') 
         model.addjobs(structure, i)
         model.addjobsLT(structure, i)
         
-def loadskills(structure):
+def loadskills(structure, a):
     
-    file = cf.data_dir + 'Challenge-2/data/small-skills.csv'
+    file = cf.data_dir + 'Challenge-2/data/{}-skills.csv'.format(a)
     headers = ['name','level','id']
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';', fieldnames=headers)
     
     for i in input_file:
         model.addid(structure, i)
 
-def loademployment(structure):
+def loademployment(structure, a):
     
-    file = cf.data_dir + 'Challenge-2/data/small-employments_types.csv'
+    file = cf.data_dir + 'Challenge-2/data/{}-employments_types.csv'.format(a)
     headers = ['type','id', 'currency_salary', 'salary_from', 'salary_to']
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';', fieldnames=headers)
     for i in input_file:
         model.addid(structure, i)
 
-def loadmultilocation(structure):
+def loadmultilocation(structure, a):
     
-    file = cf.data_dir + 'Challenge-2/data/small-multilocations.csv'
+    file = cf.data_dir + 'Challenge-2/data/{}-multilocations.csv'.format(a)
     headers = ['city','street','id']
     input_file = csv.DictReader(open(file, encoding='utf-8'), delimiter=';', fieldnames=headers)
     for i in input_file:
@@ -146,8 +146,11 @@ def req_1(control, pais, exp, n):
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
+    start_time = getTime()
     req, dic = model.req_1(control['model'], pais, exp, n)
-    return req, dic
+    stop_time = getTime()
+    delta_time = deltaTime(stop_time, start_time)
+    return req, dic, delta_time
 
 
 def req_2(control, ciudad, emp, n):
@@ -155,8 +158,11 @@ def req_2(control, ciudad, emp, n):
     Retorna el resultado del requerimiento 2
     """
     # TODO: Modificar el requerimiento 2
+    start_time = getTime()
     req, size = model.req_2(control['model'], ciudad, emp, n)
-    return req, size
+    stop_time = getTime()
+    delta_time = deltaTime(stop_time, start_time)
+    return req, size, delta_time
 
 
 def req_3(control, empresa, fi, ff):
@@ -164,10 +170,13 @@ def req_3(control, empresa, fi, ff):
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
+    start_time = getTime()
     fi = dt.strptime(fi, "%Y-%m-%d")
     ff = dt.strptime(ff, "%Y-%m-%d")
     req, dic = model.req_3(control['model'], empresa, fi, ff)
-    return req, dic
+    stop_time = getTime()
+    delta_time = deltaTime(stop_time, start_time)
+    return req, dic, delta_time
 
 
 def req_4(control, code, fi, ff):
@@ -181,12 +190,18 @@ def req_4(control, code, fi, ff):
     return dic
 
 
-def req_5(control):
+def req_5(control,ciudad,fecha1,fecha2):
     """
     Retorna el resultado del requerimiento 5
     """
     # TODO: Modificar el requerimiento 5
-    pass
+    start_time = getTime()
+    fi = dt.strptime(fecha1, "%Y-%m-%d")
+    ff = dt.strptime(fecha2, "%Y-%m-%d")
+    dic,lista = model.req_5(control['model'],ciudad,fi,ff)
+    stop_time = getTime()
+    delta_time = deltaTime(stop_time, start_time)
+    return (dic, lista, delta_time)
 
 def req_6(control):
     """

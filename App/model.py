@@ -209,13 +209,13 @@ def filtro_r3(mapa,empresa,fi, ff):
 
             if value['company_name']==empresa: 
                 if fi <= value['published_at'] <= ff:
-                    lista_nueva = lst.crit_add_ordered(lista_nueva,value, crit3)
+                    lst.crit_add_ordered(lista_nueva,value, crit3)
                     if value['experience_level'] == 'mid':
                         dic['mid'] += 1
                     if value['experience_level'] == 'senior':
-                        dic['junior'] += 1
-                    if value['experience_level'] == 'junior':
                         dic['senior'] += 1
+                    if value['experience_level'] == 'junior':
+                        dic['junior'] += 1
 
     return lista_nueva, dic
 

@@ -179,12 +179,15 @@ def req_3(control, empresa, fi, ff):
     return req, dic, delta_time
 
 
-def req_4(control):
+def req_4(control, code, fi, ff):
     """
     Retorna el resultado del requerimiento 4
     """
     # TODO: Modificar el requerimiento 4
-    pass
+    fi = dt.strptime(fi, "%Y-%m-%d")
+    ff = dt.strptime(ff, "%Y-%m-%d")
+    dic = model.req_4(control['model'], code, fi, ff)
+    return dic
 
 
 def req_5(control,ciudad,fecha1,fecha2):

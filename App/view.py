@@ -246,13 +246,16 @@ def treq3(req):
         m10 = True
     return lt, m10
 
-def print_req_4(control):
+def print_req_4(control, code, fi, ff):
     """
         Función que imprime la solución del Requerimiento 4 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 4
-    pass
-
+    dic = controller.req_3(control, code, fi, ff)
+    print()
+    print('Hay {} ofertas en el país en el periodo de consulta.' .format(dic['TOTAL_OFERTAS']))
+    print('Hay {} empresas que publicaron al menos una oferta en el país en el periodo de consulta.' .format(dic['TOTAL_EMPRESAS']))
+    print('Hay {} ciudades en las que se publicaron ofertas en el país en el periodo de consulta.' .format(dic['TOTAL_CIUDADES']))
 
 def print_req_5(control,ciudad,fecha1,fecha2):
     """

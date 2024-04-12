@@ -230,63 +230,49 @@ def crit3(oferta1, oferta2):
     else: 
         return True
 
-def req_4(jobs, code, fecha1, fecha2):
+def req_4(catalog, code, fi, ff):
     """
     Función que soluciona el requerimiento 4
     """
     # TODO: Realizar el requerimiento 4
-    (mapa_ofertas,lista_ofertas)=filtro_r4(jobs,code,fecha1,fecha2)
-    lista_ofertas_ordenada=sort_r4(lista_ofertas)
-    num_ofertas=mapa_ofertas['load']
-
-    dic={
-        'num_ofertas':num_ofertas,
-        'lista_ofertas_ordenada':lista_ofertas_ordenada
-        }
-
+    jobs = catalog['jobs']
+    dic = filtro_r4(jobs, code, fi, ff)
     return dic
 
-def filtro_r4(mapa,code,fecha1,fecha2):
-    """
-    Retorna un mapa y una lista de las ofertas.
-    """
-    fecha1=dt.strptime(fecha1, '%Y-%m-%dT%H:%M:%S.%fZ')
-    fecha2=dt.strptime(fecha2, '%Y-%m-%dT%H:%M:%S.%fZ')
-
-    mapa_nuevo=mp.new_map(int(mapa['capacity']//50)+1)
-    lista_nueva=lst.new_list()
-
+def filtro_r4(mapa, code, fi, ff):
+    lista_ofertas = lst.new_list()
+    lista_empresas = lst.new_list()
+    lista_ciudades = lst.new_list()
     for i in range(len(mapa['keys'])):
-        for j in (mapa['keys'][i]):
+        for j in(mapa['keys'][i]):
             key = j[0]
             value = j[1]
 
-            if value['country_code']==code and value['published_at']>=fecha1 and value['published_at']<=fecha2:
-                mapa_nuevo=mp.put(mapa_nuevo,value,key)
-                lista_nueva=lst.addlast(lista_nueva,value)
+            if value['country_code'] == code:
+                if fi <= value['published_at'] <= ff:
+                    lista_ofertas = lst.addlast(lista_ofertas, value)
 
-    return (mapa_nuevo,lista_nueva)
+            if value['country_code'] == code:
+                if fi <= value['published_at'] <= ff:
+                    if lst.is_present(lista_empresas, value['company_name']) == False:
+                        lista_empresas = lst.addlast(lista_empresas, value)
 
-def crit_r4(oferta1,oferta2):
-    '''
-    Compara dos ofertas.
-    '''
-    fecha1=oferta1['published_at']
-    fecha2=oferta2['published_at']
-    empresa1=oferta1['company_name'].lower()
-    empresa2=oferta2['company_name'].lower()
+            if value['country_code'] == code:
+                if fi <= value['published_at'] <= ff:
+                    if lst.is_present(lista_ciudades, value['city']) == False:
+                        lista_ciudades = lst.addlast(lista_ciudades, value)
 
-    if fecha1<fecha2 or (fecha1==fecha2 and empresa1<=empresa2):
-        return True
-    else: 
-        return False
+    total_ofertas = lst.size(lista_ofertas)
+    total_empresas = lst.size(lista_empresas)
+    total_ciudades = lst.size(lista_ciudades)
 
-def sort_r4(lista_ofertas):
-    '''
-    Ordena la lista de ofertas por quicksort.
-    '''
-    return qs.csort(lista_ofertas,crit_r4)
+    response = {
+        "TOTAL_OFERTAS": total_ofertas,
+        "TOTAL_EMPRESAS": total_empresas,
+        "TOTAL_CIUDADES": total_ciudades
+    }
 
+    return response
 
 def req_5(jobs,ciudad,fecha1,fecha2):
     """
